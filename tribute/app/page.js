@@ -15,7 +15,7 @@ export default function Home() {
       
       <div className=' h-full flex justify-center xl:ml-[50%] max-xl:text-white max-xl:bg-black max-xl:bg-opacity-60'>
 
-        <Fade in>
+        <Fade in timeout={2000}>
         <div className='min-h-[600px] text-left flex flex-col justify-center items-center space-y-3 w-[90%] md:w-[75%]'>
           <p className='text-2xl text-center font-semibold'>The Ginger Pele</p>
           <Divider variant='middle' sx={{borderWidth:2,width:200}}/>

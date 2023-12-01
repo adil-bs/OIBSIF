@@ -24,16 +24,6 @@ const Achievement = () => {
     }, [])
   return (
     <div className='flex flex-col items-center space-y-8 py-10'>
-
-        {/* <div className='inset-0 fixed -z-10 bg-gradient-to-tr from-amber-400 via-orange-200 to-red-100'>
-            <Image 
-                className='object-contain object-top md:object-cover md:object-center shadow-xl shadow-red-950'
-                src={bgImgs[autoNextImg]} 
-                alt=''
-                fill
-                sizes="(max-width: 768px) 100vw, 50vw"
-            />    
-        </div>       */}
         <ToggleButtonGroup
             exclusive 
             value={category} 
@@ -46,14 +36,12 @@ const Achievement = () => {
                 sx={{color:"black",backgroundColor:"#E5E4E4",borderRadius:3,
                     '&.Mui-selected':{
                         backgroundColor:'#5F5E5E',color:'white',
-                        ':hover':{backgroundColor:'#5F5E5E90'},
+                        ':hover':{backgroundColor:'#7C7B7B'},
                     },
-                    ':hover':{backgroundColor:"#E5E4E470",},
+                    ':hover':{backgroundColor:"#F2F2F2",},
                 }} 
                 value={ele}
-                component={Chip}
-                label={ele}
-            /> 
+            >{ele}</ToggleButton> 
         )}
         </ToggleButtonGroup>
 
