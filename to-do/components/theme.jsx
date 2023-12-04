@@ -17,6 +17,14 @@ export const theme = createTheme({
         variant:'contained',
       }
     },
+    MuiDialog:{
+      styleOverrides:{
+        paper:{
+          background: 'linear-gradient(to right, #DAE7F3, #D4E9F2,#D5DDE2)',
+          borderRadius:'15px',
+        },  
+      },
+    },
   },
   breakpoints:{
     values: {

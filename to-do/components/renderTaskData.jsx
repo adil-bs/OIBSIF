@@ -3,19 +3,19 @@ import Task from './task'
 import { AccessTime } from '@mui/icons-material'
 
 const RenderTaskData = (props) => {
-    const {taskData,mode='pending'} = props
+    const {taskData,status,className} = props
     const renderTaskDatas = taskData
-      .filter(ele => mode==='pending' ?  !ele.completed : ele.completed)
+      .filter(ele => status==='pending' ?  !ele.completed : ele.completed)
       .map(ele => <Task key={ele.timeStamp} {...ele}/>)
   return (
     renderTaskDatas.length > 0 ?
-    <div className='py-3 px-1 space-y-5'>
+    <div className={'py-3 space-y-5 '+className}>
         {renderTaskDatas}
     </div>
     :
-    <div className='text-gray-500 flex flex-col items-center pb-5'>
+    <div className={'text-gray-500 flex flex-col items-center pb-5 '+className}>
         <p className='text-[100px]'><AccessTime fontSize='inherit'/></p>
-        <p>You have no {mode} tasks right now.</p>
+        <p>You have no {status} tasks right now.</p>
     </div>
   )
 }

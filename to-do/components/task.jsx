@@ -1,25 +1,36 @@
-
-
-import {  ButtonBase, Collapse, Tooltip, useMediaQuery, useTheme } from '@mui/material'
-import React, { useContext } from 'react'
+import {  
+    Button, ButtonBase, Dialog, DialogActions, DialogContent, DialogTitle, IconButton,
+    List, ListItem, ListItemButton, ListItemIcon, ListItemText, Tooltip, useMediaQuery, 
+    useTheme 
+} from '@mui/material'
+import React, { useContext, useState } from 'react'
 import { getAbsoluteDate, getRelativeTime } from './utility'
-import { Check, Delete, Edit } from '@mui/icons-material'
+import { Check, CheckCircleOutlined, Delete, Edit, MoreVert, Replay, ReportOutlined } from '@mui/icons-material'
 import { TaskDataContext } from '@/app/page'
 
 const Task = (props) => {
     const {dispatchTaskData,handleOpenManageTask} = useContext(TaskDataContext)
     const {title,desc,deadlineDate,deadlineTime,timeStamp,completed} = props
+    const [openDetailTask, setOpenDetailTask] = useState(false)
+    const [openTaskAction,setOpenTaskAction] = useState(false)
     const deadlineDateString = deadlineDate+' '+deadlineTime
     const theme = useTheme();
     const smallDevice = useMediaQuery(theme.breakpoints.down('md'))
+    
     const actionButtonList = [
-        {icon:Check,label:"Mark as completed",color:'green',onClick:()=>dispatchTaskData({type:'completed',timeStamp})},
+        completed 
+            ? {icon:Replay,label:"Mark as incomplete",color:'#CF954D',onClick:()=>dispatchTaskData({type:'toggleComplete',timeStamp})}
+            : {icon:Check,label:"Mark as completed",color:'green',onClick:()=>dispatchTaskData({type:'toggleComplete',timeStamp})} ,
         {icon:Edit,label:"Edit",color:'black',onClick:() => handleOpenManageTask('edit',props)},
         {icon:Delete,label:"Delete",color:'#C62828',onClick:()=>dispatchTaskData({type:'delete',timeStamp})},
     ]
+
   return (
-    <Collapse in>
-    <div className='p-2 shadow-md rounded-md border-yellow-700 border'>
+    <div>
+    <div 
+        className='p-2 shadow-md rounded-md border-yellow-700 border hover:scale-[1.02] transition-all cursor-pointer' 
+        onClick={() => setOpenDetailTask(true)}
+    >
 
         <div className='flex flex-col'>
             <div className='flex justify-between'>
@@ -37,7 +48,10 @@ const Task = (props) => {
             {actionButtonList.map((ele,i) => 
                 <ButtonBase 
                     key={i} 
-                    onClick={ele.onClick}
+                    onClick={(e) => {
+                        e.stopPropagation()
+                        ele.onClick()
+                    }}
                     {... smallDevice ? {component:Tooltip, title:ele.label} :{} } 
                     sx={{
                         color:ele.color,
@@ -65,7 +79,54 @@ const Task = (props) => {
         </div>
 
     </div>
-    </Collapse>
+
+    
+    <Dialog open={openDetailTask} onClose={() => setOpenDetailTask(false)} fullWidth>
+        <DialogTitle className='!pb-0 flex justify-between items-center'>
+            <p>{title.toUpperCase()}</p>
+
+            <Tooltip
+                open = {openTaskAction}
+                arrow
+                title={
+                    <List sx={{color:"white"}}>
+                        {actionButtonList.map(ele =>
+                        <ListItem disablePadding dense key={ele.label} >
+                        <ListItemButton onClick={ele.onClick}>
+                            <ListItemIcon sx={{minWidth:'30px',color:'white'}}><ele.icon fontSize='inherit'/></ListItemIcon>
+                            <ListItemText  primary={ele.label} />
+                        </ListItemButton>
+                        </ListItem> )}
+                    </List>
+                }
+            >
+                <IconButton onClick={(e) => setOpenTaskAction(prev => !prev)}>
+                    <MoreVert fontSize='inherit' />
+                </IconButton>    
+            </Tooltip>
+            
+        </DialogTitle>
+
+        <DialogContent className=' space-y-1'>
+            <p className='mb-4'>
+                Status : {completed  
+                ?  <span className='text-green-600'>Completed <CheckCircleOutlined fontSize='inherit'/></span> 
+                :  <span className='text-red-600'>Pending... <ReportOutlined fontSize='inherit'/></span>
+            }
+            </p>
+            {desc && <p className=' overflow-hidden !mb-5 '>{desc}</p>}
+            <p className='text-sm'>Task created on : {getAbsoluteDate(timeStamp)}</p>
+            <p className='text-sm text-red-700'>
+                {deadlineDate? `Deadline set on : ${getAbsoluteDate(deadlineDateString)}` : 'Task has no deadline'}
+            </p>
+        </DialogContent>
+
+        <DialogActions>
+            <Button onClick={() => setOpenDetailTask(false)} variant='outlined'>Cancel</Button>
+        </DialogActions>
+    </Dialog>
+
+    </div>
   )
 }
 
